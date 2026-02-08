@@ -1,0 +1,1199 @@
++<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mardify - Dashboard</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ═══════════════════════════════════════════════════════════════
+          FONDO ANIMADO ESPECIAL
+          ═══════════════════════════════════════════════════════════════ -->
+    
+    <div class="particles-container" id="particles"></div>
+    <div class="gradient-orb orb-1" style="animation-duration: 25s;"></div>
+    <div class="gradient-orb orb-2" style="animation-duration: 30s; animation-delay: -10s;"></div>
+    <div class="gradient-orb orb-3" style="background: var(--gradient-forest); width: 400px; height: 400px; animation-duration: 35s; animation-delay: -15s;"></div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+          BARRA DE TÍTULO (Electron)
+          ═══════════════════════════════════════════════════════════════ -->
+    
+    <div class="titlebar">
+        <div class="titlebar-title">
+            <span class="logo-text">◆ Mardify</span>
+            <span style="margin-left: 16px; font-size: 12px; color: rgba(255,255,255,0.5);">Dashboard</span>
+        </div>
+        <div class="titlebar-controls">
+            <button class="window-btn minimize" onclick="window.electronAPI.minimize()" title="Minimizar">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                    <rect x="0" y="6" width="14" height="2" rx="1"/>
+                </svg>
+            </button>
+            <button class="window-btn maximize" onclick="window.electronAPI.maximize()" title="Maximizar">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="2" y="2" width="10" height="10" rx="1"/>
+                </svg>
+            </button>
+            <button class="window-btn close" onclick="window.electronAPI.close()" title="Cerrar">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M2 2L12 12M12 2L2 12"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+          DASHBOARD PRINCIPAL
+          ═══════════════════════════════════════════════════════════════ -->
+    
+    <div class="page dashboard-page">
+        <div class="dashboard">
+            <!-- Header del Dashboard -->
+            <header class="dashboard-header">
+                <div>
+                    <h1 class="dashboard-title" style="animation: slideUp 0.6s ease;">
+                        👋 ¡Bienvenido, <span id="userDisplayName">Usuario</span>!
+                    </h1>
+                    <p style="color: rgba(255,255,255,0.6); margin-top: 8px; animation: slideUp 0.6s ease 0.1s both;">
+                        Busca y conecta con usuarios de la plataforma
+                    </p>
+                </div>
+                
+                <div style="display: flex; align-items: center; gap: 16px; animation: slideUp 0.6s ease 0.2s both;">
+                    <button class="btn btn-primary" onclick="openChat()" style="padding: 12px 20px; display: flex; align-items: center; gap: 8px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        Chat
+                    </button>
+                    <div class="user-info" onclick="openProfileModal()" style="cursor: pointer;">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <span class="user-name" id="userName">Usuario</span>
+                    </div>
+                    <button class="btn btn-secondary" onclick="logout()" style="padding: 12px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Barra de Búsqueda -->
+            <div class="search-container" style="animation: scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;">
+                <input type="text" 
+                       id="searchInput" 
+                       class="search-input" 
+                       placeholder="🔍 Buscar usuarios por nombre, email o ID..."
+                       autocomplete="off">
+                <span class="search-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                </span>
+                <button class="search-btn" onclick="performSearch()">
+                    Buscar
+                </button>
+                
+                <!-- Sugerencias rápidas -->
+                <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+                    <span style="font-size: 12px; color: rgba(255,255,255,0.5);">Buscar:</span>
+                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="quickSearch('admin')">admin</button>
+                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="quickSearch('user')">user</button>
+                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="quickSearch('test')">test</button>
+                </div>
+            </div>
+            
+            <!-- Alertas -->
+            <div id="alertContainer" style="animation: slideUp 0.4s ease 0.4s both;"></div>
+            
+            <!-- Indicador de carga -->
+            <div id="loadingIndicator" style="display: none; text-align: center; padding: 40px; animation: fadeIn 0.3s ease;">
+                <div class="spinner spinner-lg" style="margin: 0 auto;"></div>
+                <p style="margin-top: 16px; color: rgba(255,255,255,0.6);">Buscando usuarios...</p>
+            </div>
+            
+            <!-- Contador de resultados -->
+            <div id="resultsCount" style="display: none; color: rgba(255,255,255,0.6); margin-top: 16px; animation: slideUp 0.4s ease;">
+                <span id="countText">0 usuarios encontrados</span>
+            </div>
+            
+            <!-- Resultados de búsqueda -->
+            <div class="search-results" id="searchResults">
+                <!-- Estado inicial -->
+                <div class="empty-state" id="emptyState" style="grid-column: 1 / -1;">
+                    <div class="empty-state-icon" style="animation: float 3s ease-in-out infinite;">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="color: var(--primary);">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3 style="color: rgba(255,255,255,0.8);">🔎 Comienza a buscar usuarios</h3>
+                    <p style="color: rgba(255,255,255,0.5); max-width: 400px; margin: 8px auto;">
+                        Ingresa un nombre, email o cualquier término en el campo de búsqueda para encontrar usuarios registrados.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+          MODAL DE DETALLE DE USUARIO
+          ═══════════════════════════════════════════════════════════════ -->
+    
+    <div id="userModal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content" id="modalContent">
+            <!-- El contenido se genera dinámicamente -->
+        </div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+          MODAL DE CHAT
+          ═══════════════════════════════════════════════════════════════ -->
+    
+    <div id="chatModal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeChat()"></div>
+        <div class="modal-content chat-modal-content" style="max-width: 600px; height: 80vh; display: flex; flex-direction: column;">
+            <div class="chat-header" style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--bg-glass-border);">
+                <h2 style="font-size: 20px; font-weight: 600;">💬 Chat Global</h2>
+                <button class="btn btn-secondary" onclick="closeChat()" style="padding: 8px 12px;">✕</button>
+            </div>
+            <div id="chatMessages" class="chat-messages" style="flex: 1; overflow-y: auto; padding: 16px 0; display: flex; flex-direction: column; gap: 12px;">
+                <!-- Mensajes se cargan aquí -->
+            </div>
+            <div class="chat-input-container" style="display: flex; gap: 12px; padding-top: 16px; border-top: 1px solid var(--bg-glass-border);">
+                <input type="text" id="chatInput" class="form-input" placeholder="Escribe un mensaje..." style="flex: 1;" onkeypress="if(event.key==='Enter')sendChatMessage()">
+                <button class="btn btn-primary" onclick="sendChatMessage()" style="padding: 12px 20px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+          MODAL DE CONFIGURACIÓN DE PERFIL
+          ═══════════════════════════════════════════════════════════════ -->
+    
+    <div id="profileSetupModal" class="modal" style="display: none; z-index: 9999;">
+        <div class="modal-overlay" onclick="closeProfileSetupModal()" style="z-index: 9998;"></div>
+        <div class="modal-content" style="max-width: 450px; z-index: 9999; position: relative;">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">👤 Configurar Perfil</h2>
+                <p style="color: rgba(255,255,255,0.6);">Para participar en el chat, necesitas configurar tu nick</p>
+            </div>
+            
+            <form id="profileSetupForm" style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="form-group">
+                    <label style="color: rgba(255,255,255,0.8); font-size: 14px; margin-bottom: 8px; display: block;">Nombre de usuario / Nick</label>
+                    <input type="text" id="profileName" class="form-input" placeholder="Tu nick en Discord o nombre" required style="width: 100%;">
+                </div>
+                
+                <div id="profileError" style="color: #ef4444; font-size: 14px; display: none;"></div>
+                
+                <div style="display: flex; gap: 12px; margin-top: 8px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeProfileSetupModal()" style="flex: 1;">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        💾 Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+          SCRIPTS
+          ═══════════════════════════════════════════════════════════════ -->
+    
+    <script src="../renderer.js"></script>
+    
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // INICIALIZACIÓN
+        // ═══════════════════════════════════════════════════════════════
+        
+        let currentUser = null;
+        let searchTimeout = null;
+        let allUsers = []; // Cache de usuarios
+        let hasSearched = false; // Saber si ya se hizo una búsqueda
+        
+        // Habilitar scroll en el body
+        document.body.classList.add('scrollable');
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Verificar sesión primero en appAPI, luego intentar restaurar
+            let session = window.appAPI.getSession();
+            
+            // Si no hay sesión activa, intentar restaurar desde localStorage
+            if (!session) {
+                session = restoreSession();
+                if (session) {
+                    // Restaurar sesión en appAPI también
+                    window.appAPI.saveSession(session);
+                    console.log('✅ Sesión restaurada correctamente');
+                }
+            }
+            
+            if (!session) {
+                // No hay sesión, redirigir a login
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            currentUser = session;
+            
+            // Actualizar UI con datos del usuario
+            updateUserUI();
+            
+            // Inicializar partículas
+            createParticles();
+            
+            // Configurar búsqueda en tiempo real
+            setupRealtimeSearch();
+            
+            // Cargar usuarios iniciales (mostrar pantalla principal)
+            showMainScreen();
+            
+            // Habilitar navegación con botones del navegador
+            setupHistoryNavigation();
+            
+            // Guardar sesión antes de salir
+            window.addEventListener('beforeunload', saveSessionOnExit);
+            
+            console.log('🚀 Dashboard cargado para:', currentUser.email || currentUser.username);
+        });
+
+        // ═══════════════════════════════════════════════════════════════
+        // GUARDAR Y RESTAURAR SESIÓN
+        // ═══════════════════════════════════════════════════════════════
+        
+        function saveSessionOnExit() {
+            // Guardar datos de sesión en localStorage antes de cerrar
+            if (currentUser) {
+                localStorage.setItem('mardify_last_session', JSON.stringify({
+                    user: currentUser,
+                    timestamp: Date.now()
+                }));
+                console.log('💾 Sesión guardada antes de salir');
+            }
+        }
+        
+        function restoreSession() {
+            // Intentar restaurar sesión desde localStorage
+            try {
+                const savedSession = localStorage.getItem('mardify_last_session');
+                if (savedSession) {
+                    const sessionData = JSON.parse(savedSession);
+                    // Verificar que la sesión no sea muy antigua (24 horas)
+                    const maxAge = 24 * 60 * 60 * 1000; // 24 horas en ms
+                    if (Date.now() - sessionData.timestamp < maxAge) {
+                        console.log('🔄 Restaurando sesión guardada');
+                        return sessionData.user;
+                    } else {
+                        console.log('⚠️ Sesión expirada');
+                        localStorage.removeItem('mardify_last_session');
+                    }
+                }
+            } catch (e) {
+                console.error('❌ Error restaurando sesión:', e);
+            }
+            return null;
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // NAVEGACIÓN CON HISTORIA (ATRÁS/ADELANTE)
+        // ═══════════════════════════════════════════════════════════════
+        
+        function setupHistoryNavigation() {
+            // Manejar navegación del navegador
+            window.addEventListener('popstate', (event) => {
+                if (event.state && event.state.hasSearched !== undefined) {
+                    hasSearched = event.state.hasSearched;
+                    if (hasSearched && event.state.query !== undefined) {
+                        // Restaurar búsqueda
+                        const searchInput = document.getElementById('searchInput');
+                        if (searchInput) {
+                            searchInput.value = event.state.query;
+                        }
+                        performSearch(event.state.query);
+                    } else {
+                        // Mostrar pantalla principal
+                        showMainScreen();
+                    }
+                }
+            });
+            
+            // Inicializar estado
+            history.replaceState({ hasSearched: false, query: '' }, '', window.location.href);
+        }
+        
+        // Función para actualizar el historial
+        function updateHistory(query, searched) {
+            hasSearched = searched;
+            if (searched && query) {
+                history.pushState({ hasSearched: true, query: query }, '', `?q=${encodeURIComponent(query)}`);
+            } else {
+                history.pushState({ hasSearched: false, query: '' }, '', window.location.href);
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // PANTALLA PRINCIPAL (CUANDO NO HAY BÚSQUEDA)
+        // ═══════════════════════════════════════════════════════════════
+        
+        function showMainScreen() {
+            const searchResults = document.getElementById('searchResults');
+            const emptyState = document.getElementById('emptyState');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const resultsCount = document.getElementById('resultsCount');
+            
+            if (!searchResults) return;
+            
+            // Ocultar loading
+            if (loadingIndicator) loadingIndicator.style.display = 'none';
+            if (resultsCount) resultsCount.style.display = 'none';
+            
+            // Mostrar estado inicial
+            searchResults.innerHTML = `
+                <div class="empty-state" style="grid-column: 1 / -1;">
+                    <div class="empty-state-icon" style="animation: float 3s ease-in-out infinite;">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="color: var(--primary);">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3 style="color: rgba(255,255,255,0.8);">🔎 Comienza a buscar servidores</h3>
+                    <p style="color: rgba(255,255,255,0.5); max-width: 400px; margin: 8px auto;">
+                        Ingresa un nombre, IP o cualquier término en el campo de búsqueda para encontrar servidores.
+                    </p>
+                    <div style="margin-top: 24px;">
+                        <p style="font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 12px;">💡 Sugerencias:</p>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+                            <button class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;" onclick="quickSearch('nauticmc')">nauticmc</button>
+                            <button class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;" onclick="quickSearch('minemen')">minemen</button>
+                            <button class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;" onclick="quickSearch('craft')">craft</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            hasSearched = false;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // VERIFICACIÓN INICIAL (después de que renderer.js cargue)
+        // ═══════════════════════════════════════════════════════════════
+        
+        function initializeDashboard() {
+            // Verificar que API esté disponible antes de usarlo
+            if (typeof API !== 'undefined') {
+                console.log('✅ API disponible, dashboard listo');
+            } else {
+                console.error('❌ API no disponible al inicializar dashboard');
+            }
+        }
+        
+        // Ejecutar después de un pequeño delay
+        setTimeout(initializeDashboard, 100);
+        
+        // ═══════════════════════════════════════════════════════════════
+        // UI DEL USUARIO
+        // ═══════════════════════════════════════════════════════════════
+        
+        function updateUserUI() {
+            const displayName = document.getElementById('userDisplayName');
+            const userName = document.getElementById('userName');
+            const userAvatar = document.getElementById('userAvatar');
+            
+            // Usar email como identificador principal
+            const email = currentUser.email || '';
+            const name = currentUser.fullname || currentUser.name || email.split('@')[0] || 'Usuario';
+            const firstLetter = name.charAt(0).toUpperCase();
+            
+            displayName.textContent = name.split(' ')[0]; // Solo primer nombre
+            userName.textContent = email || name;
+            userAvatar.textContent = firstLetter;
+            
+            // Avatar con gradiente aleatorio
+            const gradients = [
+                'var(--gradient-main)',
+                'var(--gradient-warm)',
+                'var(--gradient-ocean)',
+                'var(--gradient-forest)',
+                'var(--gradient-fire)'
+            ];
+            const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
+            userAvatar.style.background = randomGradient;
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // PARTÍCULAS ESPECIALES
+        // ═══════════════════════════════════════════════════════════════
+        
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 80;
+            const shapes = ['circle', 'square', 'triangle'];
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#14b8a6'];
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 12 + 3;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                const left = Math.random() * 100;
+                const duration = Math.random() * 30 + 20;
+                const delay = Math.random() * 20;
+                
+                particle.style.cssText = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: ${color};
+                    left: ${left}%;
+                    animation-duration: ${duration}s;
+                    animation-delay: -${delay}s;
+                    box-shadow: 0 0 ${size * 2}px ${color};
+                    border-radius: ${shape === 'circle' ? '50%' : shape === 'square' ? '4px' : '0'};
+                    clip-path: ${shape === 'triangle' ? 'polygon(50% 0%, 0% 100%, 100% 100%)' : 'none'};
+                `;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // BÚSQUEDA EN TIEMPO REAL
+        // ═══════════════════════════════════════════════════════════════
+        
+        function setupRealtimeSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                
+                // Debounce de 300ms
+                searchTimeout = setTimeout(() => {
+                    performSearch(e.target.value);
+                }, 300);
+            });
+            
+            // Buscar con Enter
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    clearTimeout(searchTimeout);
+                    performSearch(e.target.value);
+                }
+            });
+        }
+        
+        function quickSearch(term) {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = term;
+            performSearch(term);
+        }
+        
+        async function performSearch(query = '') {
+            // Si no hay query, mostrar pantalla principal
+            if (!query || query.trim() === '') {
+                showMainScreen();
+                updateHistory('', false);
+                return;
+            }
+            
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const searchResults = document.getElementById('searchResults');
+            const emptyState = document.getElementById('emptyState');
+            const resultsCount = document.getElementById('resultsCount');
+            const countText = document.getElementById('countText');
+            
+            // Verificar que los elementos existen
+            if (!loadingIndicator || !searchResults) {
+                console.error('❌ Elementos del DOM no encontrados');
+                return;
+            }
+            
+            // Actualizar historial
+            updateHistory(query, true);
+            
+            // Si no se pasó query, obtener del input
+            if (!query) {
+                const searchInput = document.getElementById('searchInput');
+                query = searchInput ? searchInput.value.trim() : '';
+                
+                // Si sigue vacío, mostrar pantalla principal
+                if (!query) {
+                    showMainScreen();
+                    updateHistory('', false);
+                    return;
+                }
+            }
+            
+            // Mostrar loading
+            loadingIndicator.style.display = 'block';
+            if (emptyState) emptyState.style.display = 'none';
+            searchResults.style.opacity = '0.3';
+            if (resultsCount) resultsCount.style.display = 'none';
+            
+            try {
+                console.log('🔍 Buscando usuarios:', query || '(todos)');
+                
+                // Obtener token para autenticación
+                const token = window.appAPI.getToken();
+                console.log('🔑 Token disponible:', !!token);
+                
+                const response = await API.searchUsers(query);
+                console.log('📡 Respuesta completa:', response);
+                
+                // Manejar diferentes formatos de respuesta
+                let users = [];
+                if (Array.isArray(response)) {
+                    users = response;
+                } else if (response && typeof response === 'object') {
+                    // La API retorna un objeto, buscar el array dentro
+                    users = response.users || response.data || response.results || [];
+                    if (!Array.isArray(users)) {
+                        console.warn('⚠️ No se encontró array en la respuesta:', response);
+                        users = [];
+                    }
+                }
+                
+                allUsers = users;
+                console.log('✅ Usuarios procesados:', allUsers.length);
+                
+                // Ocultar loading
+                loadingIndicator.style.display = 'none';
+                searchResults.style.opacity = '1';
+                
+                // Mostrar contador
+                if (resultsCount) {
+                    resultsCount.style.display = 'block';
+                    if (countText) {
+                        countText.textContent = `${allUsers.length} usuario${allUsers.length !== 1 ? 's' : ''} encontrado${allUsers.length !== 1 ? 's' : ''}`;
+                    }
+                }
+                
+                // Renderizar resultados
+                renderUsers(allUsers);
+                
+            } catch (error) {
+                console.error('❌ Error en búsqueda:', error);
+                
+                loadingIndicator.style.display = 'none';
+                searchResults.style.opacity = '1';
+                
+                // Mostrar mensaje de error específico
+                let errorMsg = error.message || 'Error desconocido';
+                showAlert('Error: ' + errorMsg, 'error');
+                
+                // Mostrar estado vacío con error detallado
+                searchResults.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-state-icon">😕</div>
+                        <h3>Error al buscar</h3>
+                        <p style="color: #ef4444; font-size: 14px; margin: 8px 0;">${escapeHtml(errorMsg)}</p>
+                        <p>Verifica la consola (F12) para más detalles.</p>
+                        <button class="btn btn-primary" style="margin-top: 16px;" onclick="performSearch('${query}')">
+                            Reintentar
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // RENDERIZADO DE SERVIDORES MINECRAFT
+        // ═══════════════════════════════════════════════════════════════
+        
+        function renderUsers(users) {
+            const searchResults = document.getElementById('searchResults');
+            
+            if (!users || users.length === 0) {
+                searchResults.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-state-icon">🔍</div>
+                        <h3>No se encontraron servidores</h3>
+                        <p>Intenta con otro término de búsqueda</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Generar HTML de tarjetas de servidor Minecraft
+            searchResults.innerHTML = users.map((user, index) => {
+                // Parsear datos si vienen como string JSON en la propiedad 'data'
+                let serverData = user;
+                if (user.data && typeof user.data === 'string') {
+                    try {
+                        serverData = JSON.parse(user.data);
+                        console.log('📋 Datos parseados:', serverData);
+                    } catch (e) {
+                        console.error('❌ Error parseando JSON:', e);
+                    }
+                }
+                
+                // Extraer datos del servidor
+                let serverIP = serverData.serverip || serverData.server_ip || serverData.ip || '';
+                // Si no hay IP, usar hycraft.us por defecto
+                if (!serverIP || serverIP === 'No disponible') {
+                    serverIP = 'hycraft.us';
+                }
+                
+                const serverPassword = serverData.password || '';
+                const serverName = serverData.server || serverData.name || extractServerName(serverIP);
+                const serverVersion = serverData.version || 'Desconocida';
+                const serverType = serverData.type || 'Java';
+                
+                // Verificar si la contraseña está encriptada (SHA o más de 16 caracteres)
+                const isEncrypted = serverPassword.startsWith('$SHA$') || serverPassword.length > 16;
+                const displayPassword = isEncrypted ? 'Encriptada' : (serverPassword || 'Sin contraseña');
+                
+                // Generar banner de MCLive para dominios conocidos (.us, .com, .net, .org, etc)
+                // El formato es: http://status.mclive.eu/srvName/serverIP/25565/banner.png
+                let bannerHTML = '';
+                const domainExtensions = ['.us', '.com', '.net', '.org', '.io', '.gg', '.me', '.xyz', '.club'];
+                const showBanner = domainExtensions.some(ext => serverIP.toLowerCase().endsWith(ext));
+                if (showBanner) {
+                    bannerHTML = `
+                        <div style="margin-top: 12px; text-align: center;">
+                            <img src="http://status.mclive.eu/${encodeURIComponent(serverName)}/${encodeURIComponent(serverIP)}/25565/banner.png" 
+                                 alt="Server Banner" 
+                                 style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);"
+                                 onerror="this.parentElement.style.display='none'">
+                        </div>
+                    `;
+                }
+                
+                // Gradientes para avatares
+                const avatarGradients = [
+                    'var(--gradient-main)',
+                    'var(--gradient-warm)',
+                    'var(--gradient-ocean)',
+                    'var(--gradient-forest)',
+                    'var(--gradient-fire)'
+                ];
+                const avatarGradient = avatarGradients[index % avatarGradients.length];
+                
+                // ID único para cada tarjeta
+                const cardId = `password-${index}`;
+                
+                return `
+                    <div class="user-card" 
+                         style="animation-delay: ${index * 0.1}s;">
+                        
+                        <div class="user-card-header">
+                            <div class="user-card-avatar" style="background: ${avatarGradient}; font-size: 24px;">
+                                ⛏️
+                            </div>
+                            <div class="user-card-info">
+                                <h3>${escapeHtml(serverName)}</h3>
+                                <p style="color: var(--accent-light); font-size: 12px;">${escapeHtml(serverType)} ${serverVersion !== 'Desconocida' ? '• v' + escapeHtml(serverVersion) : ''}</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; gap: 8px; margin: 12px 0;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 12px;">🌐 IP:</span>
+                                <span style="color: white; font-weight: 500; font-size: 14px; font-family: monospace;">${escapeHtml(serverIP)}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 12px;">🔑 Contraseña:</span>
+                                <span id="${cardId}" style="color: white; font-weight: 500; font-size: 14px; font-family: monospace;">${escapeHtml(displayPassword)}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 12px;">👤 Usuario:</span>
+                                <span style="color: white; font-weight: 500; font-size: 14px;">${escapeHtml(serverName)}</span>
+                            </div>
+                            ${serverPassword ? `
+                            <button class="btn btn-secondary" style="width: 100%; margin-top: 4px;" onclick="copyPassword('${escapeHtml(serverPassword)}', '${cardId}')">
+                                📋 Copiar Contraseña
+                            </button>
+                            ` : ''}
+                        </div>
+                        
+                        ${bannerHTML}
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Función para copiar contraseña al portapapeles
+        function copyPassword(password, elementId) {
+            navigator.clipboard.writeText(password).then(() => {
+                showAlert('✅ Contraseña copiada al portapapeles', 'success');
+                
+                // Mostrar que se copió temporalmente
+                const element = document.getElementById(elementId);
+                if (element && password.length > 16) {
+                    element.textContent = '✓ Copiada';
+                    setTimeout(() => {
+                        element.textContent = 'Encriptada';
+                    }, 2000);
+                }
+            }).catch(() => {
+                showAlert('❌ Error al copiar', 'error');
+            });
+        }
+        
+        // Función auxiliar para extraer nombre del servidor desde la IP
+        function extractServerName(ip) {
+            if (!ip || ip === 'No disponible') return 'Servidor';
+            // Extraer dominio principal (ej: nauticmc.net -> NauticMC)
+            const domain = ip.split('.')[0];
+            return domain.charAt(0).toUpperCase() + domain.slice(1);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // MODAL DE DETALLE DE USUARIO
+        // ═══════════════════════════════════════════════════════════════
+        
+        function showUserDetails(user) {
+            const modal = document.getElementById('userModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            const email = user.email || 'No disponible';
+            const name = user.fullname || user.name || email.split('@')[0] || 'Usuario';
+            const id = user.id || user._id || 'N/A';
+            const created = user.createdAt || user.created || 'No disponible';
+            const updated = user.updatedAt || user.updated || 'No disponible';
+            
+            const avatarGradients = [
+                'var(--gradient-main)',
+                'var(--gradient-warm)',
+                'var(--gradient-ocean)',
+                'var(--gradient-forest)',
+                'var(--gradient-fire)'
+            ];
+            const randomGradient = avatarGradients[Math.floor(Math.random() * avatarGradients.length)];
+            
+            modalContent.innerHTML = `
+                <div class="modal-header" style="text-align: center; margin-bottom: 24px;">
+                    <div style="width: 100px; height: 100px; border-radius: 50%; background: ${randomGradient}; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: bold; margin: 0 auto 16px; box-shadow: var(--shadow-lg);">
+                        ${name.charAt(0).toUpperCase()}
+                    </div>
+                    <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 8px;">${escapeHtml(name)}</h2>
+                    <p style="color: var(--primary-light);">${escapeHtml(email)}</p>
+                    <span style="display: inline-block; margin-top: 8px; padding: 6px 16px; background: var(--bg-glass); border-radius: 20px; font-size: 12px; color: rgba(255,255,255,0.6);">
+                        🆔 ${escapeHtml(String(id))}
+                    </span>
+                </div>
+                
+                <div style="display: grid; gap: 16px;">
+                    <div class="detail-row">
+                        <span class="detail-label">📧 Correo</span>
+                        <span class="detail-value">${escapeHtml(email)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">📅 Creado</span>
+                        <span class="detail-value">${escapeHtml(created)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">✏️ Actualizado</span>
+                        <span class="detail-value">${escapeHtml(updated)}</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button class="btn btn-primary" style="flex: 1;" onclick="messageUser('${escapeHtml(email)}')">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        Enviar Mensaje
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeModal()">Cerrar</button>
+                </div>
+            `;
+            
+            // Estilos adicionales para el modal
+            const style = document.createElement('style');
+            style.textContent = `
+                .modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000;
+                    animation: modalEnter 0.3s ease;
+                }
+                .modal-overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.7);
+                    backdrop-filter: blur(5px);
+                }
+                .modal-content {
+                    position: relative;
+                    background: var(--bg-dark);
+                    border: 1px solid var(--bg-glass-border);
+                    border-radius: var(--radius-xl);
+                    padding: 32px;
+                    max-width: 450px;
+                    width: 90%;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    box-shadow: var(--shadow-xl);
+                    animation: modalContentEnter 0.3s ease;
+                }
+                @keyframes modalEnter {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes modalContentEnter {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.9) translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: scale(1) translateY(0);
+                    }
+                }
+                .detail-row {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 12px 16px;
+                    background: var(--bg-glass);
+                    border-radius: var(--radius-md);
+                }
+                .detail-label {
+                    color: rgba(255,255,255,0.6);
+                    font-size: 14px;
+                }
+                .detail-value {
+                    color: white;
+                    font-weight: 500;
+                    font-size: 14px;
+                    text-align: right;
+                    word-break: break-all;
+                    max-width: 60%;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            modal.style.display = 'flex';
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('userModal');
+            modal.style.display = 'none';
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // CHAT
+        // ═══════════════════════════════════════════════════════════════
+        
+        let chatUserProfile = null;
+        let chatRefreshInterval = null;
+        
+        function openChat() {
+            console.log('🟢 Abriendo chat...');
+            
+            // Verificar si el usuario tiene perfil configurado
+            const session = window.appAPI.getSession();
+            console.log('📋 Sesión actual:', session);
+            
+            const needsProfile = !session || !session.display_name;
+            
+            if (needsProfile) {
+                console.log('⚠️ Necesita configurar perfil primero');
+                openProfileSetupModal(() => {
+                    // Callback después de configurar perfil
+                    actuallyOpenChat();
+                });
+                return;
+            }
+            
+            actuallyOpenChat();
+        }
+        
+        function actuallyOpenChat() {
+            console.log('✅ Abriendo modal de chat');
+            const modal = document.getElementById('chatModal');
+            if (!modal) {
+                console.error('❌ No se encontró el modal de chat');
+                return;
+            }
+            modal.style.display = 'flex';
+            modal.style.zIndex = '9999';
+            loadChatMessages();
+            
+            // Auto-refresh cada 5 segundos
+            chatRefreshInterval = setInterval(loadChatMessages, 5000);
+        }
+        
+        function closeChat() {
+            const modal = document.getElementById('chatModal');
+            modal.style.display = 'none';
+            if (chatRefreshInterval) {
+                clearInterval(chatRefreshInterval);
+                chatRefreshInterval = null;
+            }
+        }
+        
+        async function loadChatMessages() {
+            try {
+                const messages = await API.loadChat();
+                const container = document.getElementById('chatMessages');
+                
+                container.innerHTML = messages.map(msg => {
+                    const isMe = msg.user && msg.user.display_name === (window.appAPI.getSession()?.display_name || '');
+                    const avatar = msg.user?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.user?.display_name || 'U')}&background=random`;
+                    
+                    return `
+                        <div class="chat-message" style="display: flex; gap: 12px; align-items: flex-start; ${isMe ? 'flex-direction: row-reverse;' : ''}">
+                            <img src="${escapeHtml(avatar)}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name=U&background=random'">
+                            <div style="max-width: 70%;">
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; ${isMe ? 'justify-content: flex-end;' : ''}">
+                                    <span style="font-weight: 600; font-size: 14px; color: var(--primary-light);">${escapeHtml(msg.user?.display_name || 'Usuario')}</span>
+                                    <span style="font-size: 11px; color: rgba(255,255,255,0.4);">${new Date(msg.timestamp).toLocaleTimeString()}</span>
+                                </div>
+                                <div style="background: ${isMe ? 'var(--gradient-main)' : 'var(--bg-glass)'}; padding: 12px 16px; border-radius: 16px; border-bottom-${isMe ? 'right' : 'left'}-radius: 4px; word-break: break-word;">
+                                    ${escapeHtml(msg.text || msg.message || '')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Scroll al final
+                container.scrollTop = container.scrollHeight;
+            } catch (error) {
+                console.error('Error cargando chat:', error);
+            }
+        }
+        
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            const session = window.appAPI.getSession();
+            const nick = session?.display_name || session?.username || 'Usuario';
+            
+            try {
+                const response = await API.sendMessage(nick, text);
+                input.value = '';
+                
+                // Si la API indica que necesita perfil
+                if (response.action === 'NEED_PROFILE') {
+                    closeChat();
+                    openProfileSetupModal(() => {
+                        actuallyOpenChat();
+                        // Reenviar el mensaje después de configurar perfil
+                        setTimeout(() => sendChatMessage(), 500);
+                    });
+                    return;
+                }
+                
+                // Recargar mensajes
+                loadChatMessages();
+            } catch (error) {
+                showAlert('Error al enviar mensaje: ' + error.message, 'error');
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // CONFIGURACIÓN DE PERFIL
+        // ═══════════════════════════════════════════════════════════════
+        
+        let profileSetupCallback = null;
+        
+        function openProfileSetupModal(callback) {
+            console.log('🟢 Abriendo modal de perfil, callback:', !!callback);
+            profileSetupCallback = callback;
+            const modal = document.getElementById('profileSetupModal');
+            if (!modal) {
+                console.error('❌ No se encontró el modal de perfil');
+                return;
+            }
+            modal.style.display = 'flex';
+            modal.style.zIndex = '9999';
+            
+            // Pre-llenar con datos existentes si los hay
+            const session = window.appAPI.getSession() || {};
+            const nameInput = document.getElementById('profileName');
+            if (nameInput) {
+                nameInput.value = session.display_name || session.username || '';
+            }
+        }
+        
+        function closeProfileSetupModal() {
+            console.log('🔴 Cerrando modal de perfil');
+            const modal = document.getElementById('profileSetupModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            profileSetupCallback = null;
+        }
+        
+        function openProfileModal() {
+            // Abrir modal de perfil para editar
+            openProfileSetupModal(() => {
+                showAlert('✅ Perfil actualizado correctamente', 'success');
+            });
+        }
+        
+        function previewProfilePhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.getElementById('profilePreview');
+                preview.innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;">`;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Manejar envío del formulario de perfil
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('profileSetupForm');
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const name = document.getElementById('profileName').value.trim();
+                    const errorDiv = document.getElementById('profileError');
+                    
+                    if (!name) {
+                        errorDiv.textContent = 'El nombre es obligatorio';
+                        errorDiv.style.display = 'block';
+                        return;
+                    }
+                    
+                    errorDiv.style.display = 'none';
+                    
+                    try {
+                        // Enviar a la API solo el nombre (sin foto)
+                        const session = window.appAPI.getSession() || {};
+                        const response = await API.setupProfile({
+                            userId: session.id || session.userId || session.email,
+                            newName: name,
+                            photo: null
+                        });
+                        
+                        if (response.status === 'SUCCESS' || response.success) {
+                            // Actualizar sesión local
+                            const updatedSession = {
+                                ...session,
+                                display_name: name
+                            };
+                            window.appAPI.saveSession(updatedSession);
+                            
+                            closeProfileSetupModal();
+                            showAlert('✅ Perfil configurado correctamente', 'success');
+                            
+                            // Actualizar UI
+                            updateUserUI();
+                            
+                            // Ejecutar callback si existe
+                            if (profileSetupCallback) {
+                                profileSetupCallback();
+                            }
+                        } else {
+                            throw new Error(response.error || response.message || 'Error al guardar perfil');
+                        }
+                    } catch (error) {
+                        console.error('❌ Error guardando perfil:', error);
+                        errorDiv.textContent = 'Error: ' + (error.message || 'Error desconocido');
+                        errorDiv.style.display = 'block';
+                    }
+                });
+            }
+        });
+        
+        // ═══════════════════════════════════════════════════════════════
+        // ACCIONES DE USUARIO
+        // ═══════════════════════════════════════════════════════════════
+        
+        function messageUser(email) {
+            showAlert(`💬 Mensaje a ${email} - Usa el chat global para conversar`, 'info');
+        }
+        
+        function viewProfile(email) {
+            showAlert(`👤 Perfil de ${email}`, 'info');
+        }
+        
+        function logout() {
+            // Animación de salida
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.3s ease';
+            
+            setTimeout(() => {
+                API.logout();
+                window.location.href = 'index.html';
+            }, 300);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // UTILIDADES
+        // ═══════════════════════════════════════════════════════════════
+        
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            
+            const icons = {
+                success: '✓',
+                error: '✗',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+            
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type}" style="animation: alertEnter 0.4s ease;">
+                    <span style="margin-right: 8px;">${icons[type] || icons.info}</span>
+                    ${message}
+                </div>
+            `;
+            
+            // Auto-remove después de 5 segundos
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // EVENTOS DE TECLADO
+        // ═══════════════════════════════════════════════════════════════
+        
+        document.addEventListener('keydown', (e) => {
+            // Cerrar modal con Escape
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+        
+        console.log('🚀 Dashboard inicializado');
+    </script>
+</body>
+</html>

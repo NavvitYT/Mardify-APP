@@ -1,0 +1,68 @@
+{
+  "name": "mardify-app",
+  "version": "1.0.0",
+  "description": "Aplicación de escritorio con login, registro y búsqueda de usuarios",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron . --no-sandbox",
+    "build": "electron-builder",
+    "rebuild": "electron-rebuild",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux",
+    "dist:mac": "electron-builder --mac"
+  },
+  "keywords": [
+    "electron",
+    "mardify",
+    "login",
+    "register",
+    "app"
+  ],
+  "author": "Mardify Team",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3",
+    "electron-rebuild": "^3.2.9"
+  },
+  "dependencies": {
+    "axios": "^1.6.2"
+  },
+  "build": {
+    "appId": "com.mardify.app",
+    "productName": "Mardify",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!**/node_modules/*",
+      "!dist/*"
+    ],
+    "extraResources": [
+      "./*.mp4",
+      "./assets/**"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable"
+        },
+        {
+          "target": "zip"
+        }
+      ],
+      "icon": "assets/icon.png"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    },
+    "asar": true
+  }
+}

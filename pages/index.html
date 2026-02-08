@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mardify - Iniciar Sesión</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: #0a0a0f;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+        
+    .video-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #0a0a0f;
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+    
+    .video-overlay.active {
+        display: flex;
+        opacity: 1;
+    }
+
+        
+        .video-overlay video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .titlebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 32px;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            z-index: 1000;
+            -webkit-app-region: drag;
+        }
+        
+        .titlebar-title span {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .titlebar-controls {
+            display: flex;
+            gap: 6px;
+            -webkit-app-region: no-drag;
+        }
+        
+        .window-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+        
+        .window-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .window-btn.close:hover {
+            background: #ef4444;
+        }
+        
+        .page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 32px;
+            backdrop-filter: blur(10px);
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .logo-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            padding-left: 48px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn {
+            padding: 14px 24px;
+            border-radius: 12px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .link {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .link:hover {
+            text-decoration: underline;
+        }
+        
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+            opacity: 0.6;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        .gradient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            top: -100px;
+            right: -100px;
+        }
+        
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            bottom: -50px;
+            left: -50px;
+        }
+        
+        .orb-3 {
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <!-- VIDEO DE INICIO (fade in/out al entrar) -->
+    <div id="videoInicio" class="video-overlay" style="transition: opacity 0.5s ease;">
+        <video id="vidInicio" muted playsinline>
+            <source src="../inicio.mp4" type="video/mp4">
+        </video>
+    </div>
+    
+    <!-- VIDEO DE CARGANDO (solo se muestra durante login) -->
+    <div id="videoCargando" class="video-overlay">
+        <video id="vidCargando" muted playsinline loop>
+            <source src="../cargando.mp4" type="video/mp4">
+        </video>
+    </div>
+    
+    <!-- VIDEO DE CIERRE -->
+    <div id="videoCierre" class="video-overlay">
+        <video id="vidCierre" muted playsinline>
+            <source src="../cerrar.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- BARRA DE TÍTULO -->
+    <div class="titlebar">
+        <div class="titlebar-title">
+            <span>◆ Mardify</span>
+        </div>
+        <div class="titlebar-controls">
+            <button class="window-btn minimize" onclick="window.electronAPI.minimize()" title="Minimizar">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                    <rect x="1" y="5" width="10" height="2" rx="1"/>
+                </svg>
+            </button>
+            <button class="window-btn maximize" onclick="window.electronAPI.maximize()" title="Maximizar">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2">
+                    <rect x="1.5" y="1.5" width="9" height="9" rx="1"/>
+                </svg>
+            </button>
+            <button class="window-btn close" onclick="closeWindow()" title="Cerrar">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2">
+                    <path d="M1 1L11 11M11 1L1 11"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <!-- FONDO -->
+    <div class="particles-container" id="particles"></div>
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    
+    <!-- CONTENIDO -->
+    <div class="page">
+        <div class="card">
+            <div class="logo-container">
+                <h1 class="logo">MARDIFY</h1>
+                <p class="logo-subtitle">Conecta con estilo</p>
+            </div>
+            
+            <div id="alertContainer"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="email" class="form-input" placeholder="Correo electrónico" required autocomplete="email">
+                    <span class="input-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </span>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" id="password" class="form-input" placeholder="Contraseña" required autocomplete="current-password">
+                    <span class="input-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </span>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    Iniciar Sesión
+                </button>
+            </form>
+            
+            <p style="text-align: center; color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 20px;">
+                ¿No tienes cuenta? <a href="register.html" class="link">Regístrate gratis</a>
+            </p>
+        </div>
+    </div>
+    
+    <script src="../renderer.js"></script>
+    <script>
+        var isLoggingIn = false;
+        
+        function closeWindow() {
+            var videoCierre = document.getElementById('videoCierre');
+            var vidCierre = document.getElementById('vidCierre');
+            
+            videoCierre.classList.add('active');
+            vidCierre.currentTime = 0;
+            vidCierre.play();
+            
+            vidCierre.onended = function() {
+                videoCierre.classList.remove('active');
+                setTimeout(function() {
+                    if (window.electronAPI) window.electronAPI.close();
+                }, 300);
+            };
+            
+            setTimeout(function() {
+                if (window.electronAPI) window.electronAPI.close();
+            }, 3500);
+        }
+        
+        // INICIALIZACIÓN
+        document.addEventListener('DOMContentLoaded', function() {
+            // Reproducir video de inicio con fade in/out
+            playInicioVideo();
+            
+            // Verificar sesión primero
+            if (typeof API !== 'undefined' && API.isLoggedIn()) {
+                window.location.href = 'main.html';
+                return;
+            }
+            
+            // Crear partículas
+            createParticles();
+        });
+        
+        // VIDEO DE INICIO CON FADE IN/OUT
+        function playInicioVideo() {
+            var videoInicio = document.getElementById('videoInicio');
+            var vidInicio = document.getElementById('vidInicio');
+            
+            // Fade in
+            videoInicio.style.display = 'flex';
+            // Forzar reflow para que la transición funcione
+            void videoInicio.offsetWidth;
+            videoInicio.style.opacity = '1';
+            
+            vidInicio.currentTime = 0;
+            vidInicio.play();
+            
+            // Cuando termina el video, fade out
+            vidInicio.onended = function() {
+                // Fade out
+                videoInicio.style.opacity = '0';
+                
+                // Ocultar después de la transición
+                setTimeout(function() {
+                    videoInicio.style.display = 'none';
+                }, 500);
+            };
+            
+            // Si el video dura más de 5 segundos, forzar cierre (fallback)
+            setTimeout(function() {
+                if (!vidInicio.paused) {
+                    vidInicio.pause();
+                    videoInicio.style.opacity = '0';
+                    setTimeout(function() {
+                        videoInicio.style.display = 'none';
+                    }, 500);
+                }
+            }, 5000);
+        }
+        
+        function createParticles() {
+            var container = document.getElementById('particles');
+            var colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b'];
+            
+            for (var i = 0; i < 50; i++) {
+                var particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                var size = Math.random() * 6 + 2;
+                var color = colors[Math.floor(Math.random() * colors.length)];
+                
+                particle.style.cssText = 'width: ' + size + 'px; height: ' + size + 'px; background: ' + color + '; left: ' + Math.random() * 100 + '%; animation-duration: ' + (Math.random() * 20 + 10) + 's; animation-delay: -' + Math.random() * 10 + 's; box-shadow: 0 0 ' + size * 2 + 'px ' + color + ';';
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        var loginForm = document.getElementById('loginForm');
+        var loginBtn = document.getElementById('loginBtn');
+        
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (isLoggingIn) return;
+            
+            var email = document.getElementById('email').value.trim();
+            var password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                showAlert('Por favor completa todos los campos');
+                return;
+            }
+            
+            isLoggingIn = true;
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Cargando...';
+            
+            // Mostrar video de cargando
+            document.getElementById('videoCargando').classList.add('active');
+            document.getElementById('vidCargando').play();
+            
+            API.login(email, password).then(function(response) {
+                window.appAPI.saveSession(response.user || response);
+                
+                var token = response.token || response.accessToken || response.auth_token;
+                if (token) {
+                    window.appAPI.saveToken(token);
+                }
+                
+                // Ocultar video y redirigir
+                document.getElementById('videoCargando').classList.remove('active');
+                
+                setTimeout(function() {
+                    window.location.href = 'main.html';
+                }, 300);
+                
+            }).catch(function(error) {
+                document.getElementById('videoCargando').classList.remove('active');
+                
+                showAlert(error.message || 'Error al iniciar sesión');
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Iniciar Sesión';
+                isLoggingIn = false;
+            });
+        });
+        
+        function showAlert(message) {
+            var alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = '<div class="alert alert-error">' + message + '</div>';
+            setTimeout(function() { alertContainer.innerHTML = ''; }, 5000);
+        }
+    </script>
+</body>
+</html>

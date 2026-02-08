@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurar Perfil - Mardify</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow: hidden;
+        }
+        
+        .popup-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+        }
+        
+        .success-message {
+            text-align: center;
+            display: none;
+        }
+        
+        .success-message h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .success-message p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="popup-container">
+        <div class="card" id="formCard">
+            <div class="header">
+                <h2>👤 Configurar Perfil</h2>
+                <p>Para usar el chat, necesitas un nick</p>
+            </div>
+            
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="nickInput">Nombre de usuario / Nick</label>
+                    <input 
+                        type="text" 
+                        id="nickInput" 
+                        class="form-input" 
+                        placeholder="Tu nick en Discord o nombre"
+                        required
+                        autocomplete="off"
+                    >
+                    <div class="error-message" id="errorMsg"></div>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" onclick="cancel()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        💾 Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="card success-message" id="successCard">
+            <div class="success-icon">✓</div>
+            <h3>¡Perfil guardado!</h3>
+            <p>Ya puedes usar el chat</p>
+        </div>
+    </div>
+    
+    <script>
+        // Cargar datos existentes si los hay
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const savedSession = localStorage.getItem('mardify_user');
+                if (savedSession) {
+                    const session = JSON.parse(savedSession);
+                    if (session.display_name) {
+                        document.getElementById('nickInput').value = session.display_name;
+                    }
+                }
+            } catch (e) {
+                console.error('Error cargando sesión:', e);
+            }
+        });
+        
+        // Manejar envío del formulario
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const nick = document.getElementById('nickInput').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if (!nick) {
+                errorMsg.textContent = 'El nombre es obligatorio';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            
+            if (nick.length < 2) {
+                errorMsg.textContent = 'Mínimo 2 caracteres';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            
+            errorMsg.style.display = 'none';
+            
+            try {
+                // Guardar en localStorage
+                const savedSession = localStorage.getItem('mardify_user');
+                let session = savedSession ? JSON.parse(savedSession) : {};
+                
+                session.display_name = nick;
+                
+                localStorage.setItem('mardify_user', JSON.stringify(session));
+                
+                console.log('✅ Perfil guardado:', session);
+                
+                // Mostrar éxito
+                document.getElementById('formCard').style.display = 'none';
+                document.getElementById('successCard').style.display = 'block';
+                
+                // Notificar a la ventana padre
+                if (window.opener && !window.opener.closed) {
+                    window.opener.postMessage({ 
+                        type: 'PROFILE_SAVED', 
+                        display_name: nick 
+                    }, '*');
+                }
+                
+                // Cerrar después de 1.5 segundos
+                setTimeout(() => {
+                    window.close();
+                }, 1500);
+                
+            } catch (error) {
+                console.error('❌ Error guardando:', error);
+                errorMsg.textContent = 'Error al guardar: ' + error.message;
+                errorMsg.style.display = 'block';
+            }
+        });
+        
+        function cancel() {
+            // Notificar cancelación
+            if (window.opener && !window.opener.closed) {
+                window.opener.postMessage({ 
+                    type: 'PROFILE_CANCELLED' 
+                }, '*');
+            }
+            window.close();
+        }
+        
+        // Cerrar con Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                cancel();
+            }
+        });
+    </script>
+</body>
+</html>
